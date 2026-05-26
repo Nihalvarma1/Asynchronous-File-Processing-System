@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+
+    <property resource="application.properties" />
+
+    <include resource="org/springframework/boot/logging/logback/defaults.xml" />
+    <include resource="org/springframework/boot/logging/logback/console-appender.xml" />
+    <appender name="ROLLING_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${logging.file.name}</file>
+
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <fileNamePattern>${logging.base.path}/${track.name}/${interface.name}/${interface.name}.log.%d{yyyy-MM-dd}.%i.gz</fileNamePattern>
+            <maxFileSize>256MB</maxFileSize> <!-- roll over when file reaches 256MB -->
+            <maxHistory>90</maxHistory> <!-- keep logs for 90 days -->
+            <totalSizeCap>5GB</totalSizeCap> <!-- delete oldest logs when total exceeds 5GB -->
+        </rollingPolicy>
+
+        <encoder>
+            <pattern>%d{yyyy-MM-dd'T'HH:mm:ss.SSSZ} %-5level ${PID:-} --- [${spring.application.name}] [%28.28thread] %-80.80logger{80} : %msg%n%ex{full}</pattern>
+            <charset>UTF-8</charset>
+        </encoder>
+    </appender>
+
+    <root level="trace">
+        <appender-ref ref="CONSOLE" />
+        <appender-ref ref="ROLLING_FILE" />
+    </root>
+
+</configuration>
