@@ -7,10 +7,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.kafka.core.KafkaTemplate;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
@@ -21,6 +18,7 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping("/api")
+@CrossOrigin(origins = "*")
 @Slf4j
 public class FileUploadController {
 
@@ -34,13 +32,15 @@ public class FileUploadController {
     private String directoryPath;
 
     @PostMapping("/upload")
-    public String uploadFile(@RequestParam("file") MultipartFile file) throws IOException {
+    public String uploadFile(@RequestParam("file") MultipartFile file) throws IOException, InterruptedException {
         String jobId = UUID.randomUUID().toString();
         String originalFilename = file.getOriginalFilename();
         log.info("Event occurred: File uploaded: {}",originalFilename);
 
+        Thread.sleep(5000);
+
         //Converts File.csv to File_YYYYMMDDHHMMSS.csv
-        DateTimeFormatter fileFormatter = DateTimeFormatter.ofPattern("yyyyMMddHHmmss");
+        DateTimeFormatter fileFormatter = DateTimeFormatter.ofPattern("yyyyMMddHHmmssSSS");
         String timestamp = LocalDateTime.now().format(fileFormatter);
         String name = originalFilename.substring(0, originalFilename.lastIndexOf("."));
         String extension = originalFilename.substring(originalFilename.lastIndexOf("."));

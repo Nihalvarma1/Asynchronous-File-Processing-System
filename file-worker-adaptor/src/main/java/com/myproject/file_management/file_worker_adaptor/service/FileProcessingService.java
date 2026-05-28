@@ -21,6 +21,9 @@ public class FileProcessingService {
     @Autowired
     private ReportService reportService;
 
+    @Autowired
+    private FileArchiveService fileArchiveService;
+
     public void processFile(FileEventDto event) throws IOException {
 
         jobService.updateStatus(event.getJobId(),"PROCESSING");
@@ -32,6 +35,8 @@ public class FileProcessingService {
 
         reportService.generateReport(event.getJobId(), report, event);
         jobService.updateStatus(event.getJobId(),"COMPLETED");
+        fileArchiveService.moveCsvFileToArchive(event.getFilePath());
+
     }
 
     private SalaryReport calculateSalary(List<String> lines) {

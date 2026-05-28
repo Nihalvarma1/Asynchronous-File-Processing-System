@@ -20,9 +20,9 @@ public class FileProcessingConsumer {
             groupId = "file-upload-group"
     )
     public void consume(FileEventDto event)
-            throws IOException {
+            throws IOException, InterruptedException {
         log.info("Message Received from Consumer: File-Upload-Adaptor\n{\n\t\"jobId\": \"{}\"\n\t\"fileName\": \"{}\"\n\t\"filePath\": \"{}\"\n}",event.getJobId(),event.getFileName(),event.getFilePath());
-
+        Thread.sleep(5000);
         processingService.processFile(event);
     }
 }

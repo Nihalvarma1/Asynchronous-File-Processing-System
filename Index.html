@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Kafka File Upload</title>
+
+  <style>
+    body {
+      font-family: "Aptos", "Segoe UI", "Roboto", sans-serif;
+       background: #303841;
+      text-align: center;
+      padding-top: 60px;
+    }
+
+    .container {
+      background: #F5F5F5;
+      padding: 30px;
+      width: 400px;
+      margin: auto;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+
+    h1 {
+      font-size: 20px;
+      margin-bottom: 20px;
+	  color: #303841;
+    }
+
+    input[type="file"] {
+      margin: 20px 0;
+    }
+
+    button {
+      padding: 10px 15px;
+      margin: 5px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+	
+	
+
+    .upload {
+      background: #1CB531;
+      color: white;
+      font-weight: bold;
+    }
+	
+	.upload:hover {
+  background-color: #2ecc71 ;
+}
+
+
+    .reset {
+      background: #d04334;
+      color: white;
+      font-weight: bold;
+    }
+	
+	.reset:hover{
+		background-color: #e74c3c ;
+	}
+	
+	button:active {
+  animation: blink 0.2s;
+}
+
+@keyframes blink {
+  0% { opacity: 1; }
+  50% { opacity: 0; }
+  100% { opacity: 1; }
+}
+
+  </style>
+</head>
+
+<body>
+
+  <div class="container">
+    <h1>Asynchronous File Processing System Using Apache Kafka</h1>
+
+    <input type="file" id="fileInput" accept=".csv" />
+
+    <div>
+      <button class="upload" onclick="uploadFile()">Upload</button>
+      <button class="reset" onclick="resetFile()">Reset</button>
+    </div>
+	
+	<div>
+      <h5 id= 'messageBox'></h5>
+    </div>
+  </div>
+
+  <script>
+    const BACKEND_URL = "http://localhost:8081/api/upload"; // change this to your endpoint
+
+    function uploadFile() {
+      const fileInput = document.getElementById("fileInput");
+      const file = fileInput.files[0];
+
+      if (!file) {
+		document.getElementById("messageBox").innerHTML = "Please select a CSV file first."
+        return;
+      }
+
+      if (!file.name.endsWith(".csv")) {
+		document.getElementById("messageBox").innerHTML = "Only CSV files are allowed!"
+		return;
+      }
+	  
+	  document.getElementById("messageBox").innerHTML = "Uploading..."
+      
+	  const formData = new FormData();
+      formData.append("file", file);
+
+      fetch(BACKEND_URL, {
+        method: "POST",
+        body: formData
+      })
+      .then(response => response.text())
+      .then(data => {
+		document.getElementById("messageBox").innerHTML = data
+      })
+      .catch(error => {
+        console.error("Error:", error);
+        document.getElementById("messageBox").innerHTML = "Upload Failed!"
+      });
+    }
+
+    function resetFile() {
+      document.getElementById("fileInput").value = "";
+	  document.getElementById("messageBox").innerHTML = "";
+    }
+  </script>
+
+</body>
+</html>
