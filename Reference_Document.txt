@@ -1,0 +1,69 @@
+Asynchronous File Processing System
+
+User uploads CSV → backend processes in background → generates summary report → user checks status/downloads result.
+
+3 Services: Upload Service, Worker Service, Notification Service
+Upload Service: File Upload, Storing File, Send Kafka Event
+Worker Service: consuming Kafka message, processing CSV, generating report
+Notification Service: tracking job status, returning progress
+
+Flow: 
+User Uploads CSV
+       ↓
+Upload Service stores file
+       ↓
+Upload Service sends Kafka message
+       ↓
+Worker Service processes CSV
+       ↓
+Worker generates summary report
+       ↓
+Status updated in DB
+       ↓
+User checks status/downloads report
+       ↓
+Save file to a path and send an email alert with attachment
+
+Sample Input & Output:
+Input:(CSV)
+id,name,salary
+1,John,5000
+2,Alice,7000
+3,Bob,4000
+
+Worker generates:
+Total Employees: 3
+Average Salary: 5333
+Highest Salary: 7000
+Lowest Salary: 4000
+
+Save as: TXT, PDF, JSON
+
+References:
+Kafka Installation: https://www.youtube.com/watch?v=LX5LKBYHmyU
+Kafka Demo: https://www.youtube.com/watch?v=WOPPG5tyApg
+
+
+Kafka Commands:bED3xJ0uRWuQTUvEOMo1-A
+.\bin\windows\kafka-storage.bat random-uuid
+.\bin\windows\kafka-storage.bat format --standalone -t (Generated UUID Paste here) -c config\server.properties
+.\bin\windows\kafka-server-start.bat .\config\server.properties
+jps
+
+Kafka UI: Offset Explorer
+Cluster: local
+Bootstarp Version: localhost:9092
+
+
+
+.\bin\windows\kafka-storage.bat format --standalone -t vYeX-7H5QPuc7B4fMiL3Qg -c config\server.properties
+
+
+file Worker service:
+find the file from recieved json
+
+Tools Required:
+JAVA
+KAFKA SERVER
+INTELLIJ
+MYSQL
